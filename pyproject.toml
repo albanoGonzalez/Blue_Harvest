@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "albano-blue"
+version = "0.1.0"
+description = "dependencies to create the project"
+authors = ["albanoGonzalez <albanologro@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.10.15"
+numpy = "^2.2.1"
+pandas = "^2.2.3"
+apache-airflow = "^2.10.4"
+requests = "^2.32.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
