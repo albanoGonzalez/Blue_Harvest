@@ -1,0 +1,9 @@
+BLUE HARVEST
+
+1. ME QUECREO UN ENTORNO VIRUTAL Y CARGO LAS LIBRERIAS  - POETRY
+2. GITHUB: git clone https://github.com/tu-usuario/nombre-repositorio.git
+cd nombre-repositorio
+
+
+3. Instalo las dependencias con poetry: poetry install
+
