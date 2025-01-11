@@ -3,40 +3,33 @@ from Functions.connections import (
     api_connection
 )
 from Functions.data import (
-    get_names,
-    get_comics_character
+    get_all_values,
+    get_all_values_comics,
+    get_names
 )
-import requests
-from hashlib import md5
 import pandas as pd
 def main():
     mapping = load_json_config("../mapping_apis.json")
     api_list = mapping["api_list"]
-    # show each api
     for api in api_list:
-        url = f"{api['base_url']}{api['endpoint']}"
-        print(f"Base URL: {url}")
-        ts = api["params"]["ts"]
-        public_key = api["params"]["public_key"]
-        private_key = api["params"]["private_key"]
-        params = {
-            "apikey": api["params"]["public_key"],
-            "ts": api["params"]["ts"],
-            "hash": md5(f"{ts}{private_key}{public_key}".encode("utf8")).hexdigest()
-        }
-        print(params)
         if api['endpoint'] == "/characters":
-            values = api_connection(url, params=params)
-            print("characters")
-            characters = get_names(values)
-            print(characters)
-        elif api['endpoint'] == "/comics" and characters:
-            print("comics")
-            for i in characters:
-                params['characters'] = "1011334"
-                values = api_connection(url, params=params)
-                print(values)
-                comics = get_comics_character(characters,values)
-                print(comics)
+            all_data = get_all_values(api)
+            print(f"Total data: {len(all_data)}")
+            characters_comics = get_names(all_data)
+            for id, name, total in characters_comics:
+                print(f"Character name: {name} - quantity of comics they appear in: {total}")
+        '''elif api['endpoint'] == "/comics" and characters:
+            names_comics_appear = set()
+            for id, name in characters:
+                print(id)
+                print(name)
+                total = get_all_values_comics(api,id)
+                print(total)
+                names_comics_appear.add((name,total))
+            print(names_comics_appear)
+        '''
+    df = pd.DataFrame(characters_comics, columns=["id", "character_name", "quantity_comics"])
+
+    df.to_csv("characters_comics.csv", index=False)
 if __name__ == "__main__":
     main()

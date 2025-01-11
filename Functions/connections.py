@@ -1,5 +1,4 @@
 import requests
-import pandas as pd
 import json
 
 def load_json_config(json_path):
