@@ -5,12 +5,12 @@ from Functions.connections import (
 def get_all_values(api):
     """
     Get all the data from the API, multiple calls, you just can read 100 records each call
-    :param api_list: it contains the fields and the url to make the call
+    :param api: it contains the parameters and the url to make the call
     :return: list with the data
     """
     all_results = []
     url = f"{api['base_url']}{api['endpoint']}"
-    print(f"Llamando a la API: {url}")
+    print(f"Calling to the API: {url}")
     ts = api["params"]["ts"]
     public_key = api["params"]["public_key"]
     private_key = api["params"]["private_key"]
@@ -23,21 +23,29 @@ def get_all_values(api):
     }
 
     while True:
-        values = api_connection(url, params=params)
-        results = values["data"]["results"]
-        all_results.extend(results)
+        try:
+            values = api_connection(url, params=params)
+            if not values or "data" not in values or "results" not in values["data"]:
+                print("No data retrieved. Exiting loop.")
+                break
+            results = values["data"]["results"]
+            all_results.extend(results)
 
-        #len lower than the limit we stop because we do not have more data to red, also i can use the total field in the API.
-        if len(results) < params["limit"]:
+            # len lower than the limit we stop because we do not have more data to red, also i can use the total field in the API.
+            if len(results) < params["limit"]:
+                break
+
+            params["offset"] += params["limit"]
+        except Exception as e:
+            print(f"Error processing data: {e}")
             break
-        params["offset"] += params["limit"]
 
     return all_results
 
 def get_all_values_comics(api, id):
     """
     Get all the comics for each character
-    :param api_list: it contains the fields and the url to make the call
+    :param api: it contains the parameters and the url to make the call
     :param id: id for the character
     :return: int (total number of comics for this character)
     """
@@ -62,10 +70,10 @@ def get_all_values_comics(api, id):
 
 def get_names(all_data):
     """
-    get the name and id for all the characters in the api
+    get the name, id and quantity of comics they appear
 
-    :param values: data from the API
-    :return: a list consisting of the id and the name of the character
+    :param all_data: data from the API
+    :return: a list consisting of the id, the name of the character and the quantity of comics they appear.
     """
     unique_names = set()  # avoid duplicates
     for char in all_data:
