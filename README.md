@@ -7,11 +7,6 @@ This project implements a data pipeline using the Marvel API to extract, transfo
 
 ---
 
-# **MARVEL API - Data Integration and Visualization**
-
-## **Project Overview**
-
-
 
 
 ## **What the Code Does**
