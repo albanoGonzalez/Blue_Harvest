@@ -19,11 +19,11 @@ app = FastAPI()
 
 DATA_PATH = "../data/characters_comics.csv"
 
-#Endopoint to see the top 10 Characters by Comic Appearances
+
 @app.get("/chart")
 def generate_chart():
     """
-
+    Endopoint to see the top 10 Characters by Comic Appearances
     :return: chart to see the top 10 characters by quantity of comics
     """
     df = pd.read_csv(DATA_PATH)
@@ -42,11 +42,11 @@ def generate_chart():
 
     return FileResponse(chart_path, media_type="image/png")
 
-#Endpoint to see the whole data
+
 @app.get("/data")
 def get_data():
     """
-
+    Endpoint to see the whole data
     :return: all the data in json format
     """
     if not os.path.exists(DATA_PATH):
@@ -54,11 +54,11 @@ def get_data():
     df = pd.read_csv(DATA_PATH)
     return JSONResponse(content=df.to_dict(orient="records"))
 
-#Endpoint to filter by any character
+
 @app.get("/character-comics/")
 def get_comics_by_character(character_name: str):
     """
-
+    Endpoint to filter by any character
     :param character_name: character name as an argument
     :return: quantity of comics for each character you filter by
     """
